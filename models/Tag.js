@@ -6,7 +6,7 @@ const TagSchema = new mongoose.Schema(
 		shortId: {
 			type: String,
 			unique: true,
-			default: generateShortId(7),
+			default: () => generateShortId(5),
 		},
 		tagConfig: {
 			type: String,

@@ -53,6 +53,7 @@ exports.createTag = async (props) => {
 			return { data: newTag };
 		}
 	} catch (error) {
+		console.log(error);
 		return {
 			error: error.message || "An error occurred while processing the request",
 		};
