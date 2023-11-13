@@ -16,9 +16,6 @@ app.use(
 // Routes
 app.use("/tag", tagRoutes);
 
-// for jobs
-const jobs = require("./jobs/mainJob");
-
 // handle 404 routes
 app.use("*", (req, res, next) => {});
 

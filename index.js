@@ -23,3 +23,8 @@ const port = process.env.PORT;
 app.listen(port, () => {
 	console.log(`Application live at port ${port}`);
 });
+
+// for jobs
+if (process.env.JOB_STATUS) {
+	const jobs = require("./jobs/mainJob");
+}
