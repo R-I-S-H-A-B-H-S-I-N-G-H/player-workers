@@ -23,16 +23,39 @@ exports.getTagByShortId = async (shortId) => {
 
 exports.createTag = async (props) => {
 	try {
-		const { config } = props;
-		const tagConfig = await generateTagFromPlayerConfig(config);
-		const tag = await TAG.create({
-			playerConfig: config,
-			tagConfig: tagConfig,
-		});
+		const { id, config } = props;
 
-		return { data: tag };
+		if (id) {
+			// If an ID is provided, update the existing entry
+			const tagConfig = await generateTagFromPlayerConfig(config);
+			const updatedTag = await TAG.findByIdAndUpdate(
+				id,
+				{
+					playerConfig: config,
+					tagConfig: tagConfig,
+				},
+				{ new: true },
+			); // { new: true } returns the updated document
+
+			if (!updatedTag) {
+				return { error: "Tag not found for the given ID" };
+			}
+
+			return { data: updatedTag };
+		} else {
+			// If no ID is provided, create a new entry
+			const tagConfig = await generateTagFromPlayerConfig(config);
+			const newTag = await TAG.create({
+				playerConfig: config,
+				tagConfig: tagConfig,
+			});
+
+			return { data: newTag };
+		}
 	} catch (error) {
-		return { error: error };
+		return {
+			error: error.message || "An error occurred while processing the request",
+		};
 	}
 };
 
