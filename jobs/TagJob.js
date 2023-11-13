@@ -3,8 +3,8 @@ const { getTagsFromLastMins, getTagById } = require("../service/TagService");
 const { uploadToS3 } = require("../Api/S3Api");
 
 exports.pushTagToS3 = () =>
-	schedule.scheduleJob("* */5 * * * *", async () => {
-		const tagIdList = await getTagsFromLastMins(6);
+	schedule.scheduleJob("* */2 * * * *", async () => {
+		const tagIdList = await getTagsFromLastMins(10);
 		for (const _tagId of tagIdList) {
 			const { id } = _tagId;
 			const tag = await getTagById(id);
@@ -12,6 +12,5 @@ exports.pushTagToS3 = () =>
 			const fileName = shortId + "/tag.js";
 			const fileBody = tagConfig;
 			const s3URL = await uploadToS3({ fileName, fileBody });
-			console.log("S3 urls :: ", s3URL);
 		}
 	});
