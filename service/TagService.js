@@ -11,6 +11,16 @@ exports.getTagById = async (id) => {
 	}
 };
 
+exports.getTagByShortId = async (shortId) => {
+	try {
+		const tag = await TAG.findOne({ shortId: shortId });
+		return { data: tag };
+	} catch (error) {
+		console.error("TAG WITH ID DOES NOT EXIST", error);
+		return { error: error };
+	}
+};
+
 exports.createTag = async (props) => {
 	try {
 		const { config } = props;

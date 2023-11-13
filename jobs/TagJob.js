@@ -12,5 +12,6 @@ exports.pushTagToS3 = () =>
 			const fileName = shortId + "/tag.js";
 			const fileBody = tagConfig;
 			const s3URL = await uploadToS3({ fileName, fileBody });
+			console.log("S3 urls :: ", s3URL);
 		}
 	});
