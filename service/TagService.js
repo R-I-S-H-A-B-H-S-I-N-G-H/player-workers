@@ -1,33 +1,40 @@
 const { minify } = require("terser");
 const TAG = require("../models/Tag");
 
-exports.getTagById = async (req, res, next) => {
-	console.log("HERE");
+exports.getTagById = async (id) => {
 	try {
-		const { id } = req.params;
 		const tag = await TAG.findById(id);
-		res.status(200).json(tag);
+		return { data: tag };
 	} catch (error) {
 		console.error("TAG WITH ID DOES NOT EXIST", error);
-		return res.status(500).json({ error: "TAG WITH ID DOES NOT EXIST" });
+		return { error: error };
 	}
 };
 
-exports.createTag = async (req, res, next) => {
+exports.createTag = async (props) => {
 	try {
-		const { config } = req.body;
+		const { config } = props;
 		const tagConfig = await generateTagFromPlayerConfig(config);
 		const tag = await TAG.create({
 			playerConfig: config,
 			tagConfig: tagConfig,
 		});
 
-		console.log(tagConfig);
-		res.status(200).json({ ...tag });
+		return { data: tag };
 	} catch (error) {
-		console.error("#ERROR CREATING TAG", error);
-		return res.status(500).json({ error: "#ERROR CREATING TAG" });
+		return { error: error };
 	}
+};
+
+exports.getTagsFromLastMins = async (_mins = 10) => {
+	const curTime = new Date();
+	const prevTime = curTime.setMinutes(curTime.getMinutes() - _mins);
+	const tagList = await TAG.find({
+		updatedAt: {
+			$gte: prevTime,
+		},
+	}).select("_id");
+	return tagList;
 };
 
 async function generateTagFromPlayerConfig(props) {
