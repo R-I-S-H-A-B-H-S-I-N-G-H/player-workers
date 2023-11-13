@@ -16,6 +16,11 @@ const TagSchema = new mongoose.Schema(
 			type: mongoose.Schema.Types.Mixed,
 			require: true,
 		},
+		name: {
+			type: String,
+			default: "NOT ASSIGNED",
+			require: true,
+		},
 	},
 	{ timestamps: true },
 );

@@ -23,7 +23,7 @@ exports.getTagByShortId = async (shortId) => {
 
 exports.createTag = async (props) => {
 	try {
-		const { id, config } = props;
+		const { id, config, name } = props;
 
 		if (id) {
 			// If an ID is provided, update the existing entry
@@ -31,6 +31,7 @@ exports.createTag = async (props) => {
 			const updatedTag = await TAG.findByIdAndUpdate(
 				id,
 				{
+					name: name,
 					playerConfig: config,
 					tagConfig: tagConfig,
 				},
@@ -46,6 +47,7 @@ exports.createTag = async (props) => {
 			// If no ID is provided, create a new entry
 			const tagConfig = await generateTagFromPlayerConfig(config);
 			const newTag = await TAG.create({
+				name: name,
 				playerConfig: config,
 				tagConfig: tagConfig,
 			});
@@ -69,6 +71,19 @@ exports.getTagsFromLastMins = async (_mins = 10) => {
 		},
 	}).select("_id");
 	return tagList;
+};
+
+exports.getTagList = async (perPage, page) => {
+	const tagList = await TAG.find()
+		.select("name")
+		.select("createdAt")
+		.select("updatedAt")
+		.select("shortId")
+		.limit(perPage)
+		.skip(perPage * page)
+		.sort({ updatedAt: "desc" })
+		.exec();
+	return { data: tagList };
 };
 
 async function generateTagFromPlayerConfig(props) {
