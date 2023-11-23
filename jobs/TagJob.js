@@ -5,7 +5,7 @@ const { uploadToS3 } = require("../Api/S3Api");
 exports.pushTagToS3 = () =>
 	schedule.scheduleJob("*/10 * * * * *", async () => {
 		console.log("----TAG PUSH JOB----");
-		const tagIdList = await getTagsFromLastMins(10);
+		const tagIdList = await getTagsFromLastMins(1);
 		console.log(tagIdList);
 		for (const _tagId of tagIdList) {
 			const { id } = _tagId;
