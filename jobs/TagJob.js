@@ -6,6 +6,7 @@ exports.pushTagToS3 = () =>
 	schedule.scheduleJob("*/10 * * * * *", async () => {
 		console.log("----TAG PUSH JOB----");
 		const tagIdList = await getTagsFromLastMins(10);
+		console.log(tagIdList);
 		for (const _tagId of tagIdList) {
 			const { id } = _tagId;
 			const tag = await getTagById(id);
